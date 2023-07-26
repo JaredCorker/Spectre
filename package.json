@@ -3,7 +3,8 @@
   "displayName": "Spectre",
   "description": "VSCode command to open your spec files",
   "icon": "assets/spectre_logo.png",
-  "version": "1.0.1",
+  "publisher": "JaredCorker",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.80.0"
   },
