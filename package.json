@@ -2,7 +2,7 @@
   "name": "spectre",
   "displayName": "Spectre",
   "description": "VSCode command to open your spec files",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -13,8 +13,8 @@
   "main": "./extension.js",
   "contributes": {
     "commands": [{
-      "command": "spectre.helloWorld",
-      "title": "Hello World"
+      "command": "spectre.spectre",
+      "title": "Spectre - open spec/code file"
     }]
   },
   "scripts": {
