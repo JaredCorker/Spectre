@@ -5,11 +5,11 @@ This is a simple extension to make switching between `code` and `spec` files eas
 ## Features
 
 - From a ts/tsx file, open the corresponding spec file
-![code-to-spec](https://github.com/JaredCorker/Spectre/blob/main/assets/code-to-spec.gif)
+![code-to-spec](/assets/code-to-spec.gif)
 - From a spec file, open the corresponding ts/tsx file
-![spec-to-code](https://github.com/JaredCorker/Spectre/blob/main/assets/spec-to-code.gif)
+![spec-to-code](/assets/spec-to-code.gif)
 - If no spec file is found, offer to create one
-![create-spec](https://github.com/JaredCorker/Spectre/blob/main/assets/create-spec.gif)
+![create-spec](/assets/create-spec.gif)
 
 **NOTE**
 I strongly suggest you bind the `spectre.spectre` command to a keyboard shortcut in vscode
