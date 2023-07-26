@@ -8,17 +8,17 @@ function activate(context) {
 		const currentFile = vscode.window.activeTextEditor.document.fileName
 		if (!currentFile) return;
 
-		if (currentFile.includes("spec")) {
+		if (currentFile.includes(".spec.")) {
 			const codeFile = currentFile.replace("spec.", "").replace("__tests__/", "")
 			vscode.window.showTextDocument(vscode.Uri.file(codeFile), { preview: false })
 		} else {
 			const match = currentFile.match(/\/([a-zA-Z]*).(ts|tsx)$/)
 			if (!match) return;
 
-			const specFileName = `__tests__/${match[1]}.spec.${match[2]}`
+			const specFileName = `/__tests__/${match[1]}.spec.${match[2]}`
 			const specFilePath = currentFile.replace(match[0], specFileName)
-			vscode.window.showTextDocument(vscode.Uri.file(specFilePath), { preview: false }).then(() => {}, async () => {
-				const answer = await vscode.window.showErrorMessage(`Could not find ${specFileName}`, "Create", "Cancel")	
+			vscode.window.showTextDocument(vscode.Uri.file(specFilePath), { preview: false }).then(() => { }, async () => {
+				const answer = await vscode.window.showErrorMessage(`Could not find ${specFileName}`, "Create", "Cancel")
 				if (answer === "Create") {
 					const wsEdit = new vscode.WorkspaceEdit()
 					wsEdit.createFile(vscode.Uri.file(specFilePath), { ignoreIfExists: true })
@@ -34,7 +34,7 @@ function activate(context) {
 	context.subscriptions.push(disposable);
 }
 
-function deactivate() {}
+function deactivate() { }
 
 module.exports = {
 	activate,
