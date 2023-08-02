@@ -4,7 +4,7 @@
   "description": "VSCode command to open your spec files",
   "icon": "assets/spectre_logo.png",
   "publisher": "JaredCorker",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -21,7 +21,16 @@
     "commands": [{
       "command": "spectre.spectre",
       "title": "Spectre - open spec/code file"
-    }]
+    },
+    {
+      "command": "spectre.test",
+      "title": "Spectre - Test open spec/code file"
+    },
+    {
+      "command": "spectre.test-watch",
+      "title": "Spectre - Test Watch open spec/code file"
+    }
+  ]
   },
   "scripts": {
     "lint": "eslint .",

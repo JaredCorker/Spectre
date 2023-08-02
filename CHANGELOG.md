@@ -11,3 +11,4 @@ All notable changes to the "spectre" extension will be documented in this file.
 ## [Released]
 - 1.0.3: Update README and image paths
 - 1.0.4: Add repository to package.json
+- 1.0.5 Add commands to run test on the currently opened test file, or it's associated file - in either normal or watch mode
