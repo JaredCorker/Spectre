@@ -4,7 +4,7 @@
   "description": "VSCode command to open your spec files",
   "icon": "assets/spectre_logo.png",
   "publisher": "JaredCorker",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "engines": {
     "vscode": "^1.80.0"
   },

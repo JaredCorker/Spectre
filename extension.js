@@ -17,23 +17,35 @@ async function getTestCommand(filePath, watch) {
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-  let disposableSpectre = vscode.commands.registerCommand('spectre.spectre', function () {
-    const currentFile = vscode.window.activeTextEditor.document.fileName;
-    if (!currentFile) return;
+	let disposableSpectre = vscode.commands.registerCommand('spectre.spectre', function () {
+		const currentFile = vscode.window.activeTextEditor.document.fileName
+		if (!currentFile) return;
 
-    let fileToOpen;
-    if (currentFile.includes(".spec.")) {
-      fileToOpen = currentFile.replace("spec.", "").replace("__tests__/", "");
-    } else {
-      const match = currentFile.match(/\/([a-zA-Z]*).(ts|tsx)$/);
-      if (!match) return;
+		if (currentFile.includes(".spec.")) {
+			const codeFile = currentFile.replace("spec.", "").replace("__tests__/", "")
+			vscode.window.showTextDocument(vscode.Uri.file(codeFile), { preview: false })
+		} else {
+			const match = currentFile.match(/\/([a-zA-Z]*).(ts|tsx)$/)
+			if (!match) return;
 
-      const specFileName = `/__tests__/${match[1]}.spec.${match[2]}`;
-      fileToOpen = currentFile.replace(match[0], specFileName);
-    }
+			const specFileName = `/__tests__/${match[1]}.spec.${match[2]}`
+			const specFilePath = currentFile.replace(match[0], specFileName)
+			vscode.window.showTextDocument(vscode.Uri.file(specFilePath), { preview: false }).then(() => { }, async () => {
+				const answer = await vscode.window.showErrorMessage(`Could not find ${specFileName}`, "Create", "Cancel")
+				if (answer === "Create") {
+					const wsEdit = new vscode.WorkspaceEdit()
+					wsEdit.createFile(vscode.Uri.file(specFilePath), { ignoreIfExists: true })
+					vscode.workspace.applyEdit(wsEdit).then(() => {
+						vscode.window.showTextDocument(vscode.Uri.file(specFilePath), { preview: false })
+					})
+				}
+			})
+		}
 
-    vscode.window.showTextDocument(vscode.Uri.file(fileToOpen), { preview: false });
-  });
+	});
+
+	context.subscriptions.push(disposableSpectre);
+
 
   async function runTest(watch) {
     const currentFile = vscode.window.activeTextEditor.document.fileName;
