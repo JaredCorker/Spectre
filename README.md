@@ -22,8 +22,17 @@ This is a simple extension to make switching between `code` and `spec` files eas
 - Run test on currently opened spec file
 - Run test on the corresponding spec file for a currently opened ts/tsx file
 
+### Spectre Mock Open
+
+`spectre.mock`
+
+- Open a mock file from a code/spec file
+- Open a spec file from a mock file
+
 **NOTE**
-I strongly suggest you bind the `spectre.spectre`, `spectre.test` and `spectre.test-watch` commands to a keyboard shortcut in vscode
+I strongly suggest you bind these commands to keyboard shortcuts in vscode
+
+e.g. ![shortcuts](/assets/shortcuts.png)
 
 ## Limitatations
 
