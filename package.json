@@ -21,19 +21,19 @@
     "commands": [
     {
       "command": "spectre.spectre",
-      "title": "Spectre - open spec/code file"
+      "title": "Spectre - Open test file"
     },
     {
       "command": "spectre.test",
-      "title": "Spectre - Test open spec/code file"
+      "title": "Spectre - Run tests"
     },
     {
       "command": "spectre.test-watch",
-      "title": "Spectre - Test Watch open spec/code file"
+      "title": "Spectre - Run tests in watch mode"
     },
     {
       "command": "spectre.mock",
-      "title": "Spectre - open mock file"
+      "title": "Spectre - Open mock file"
     }
   ]
   },
