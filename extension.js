@@ -22,8 +22,8 @@ function specFileToCodeFile(filePath) {
 
 async function getTestCommand(filePath, watch) {
   const workspaceConfig = vscode.workspace.getConfiguration('spectre')
-  let testCommand = workspaceConfig.get('testCommand', 'pnpm run test');
-  let testCommandWatch = workspaceConfig.get('testCommandWatch', 'pnpm run test --watch');
+  let testCommand = workspaceConfig.get('testCommand', 'pnpm test');
+  let testCommandWatch = workspaceConfig.get('testCommandWatch', 'pnpm test-watch');
 
   return `${watch ? testCommandWatch : testCommand} -- ${filePath}`
 }
