@@ -1,7 +1,7 @@
 const vscode = require('vscode');
 const fs = require('fs');
 
-const fileNameRegex = /\/([a-zA-Z]*).(ts|tsx)$/;
+const fileNameRegex = /\/([a-zA-Z]*).(ts|tsx|js|jsx)$/;
 
 async function openFileWithFallback(filePath, fileName) {
   vscode.window.showTextDocument(vscode.Uri.file(filePath), { preview: false }).then(() => { }, async () => {
