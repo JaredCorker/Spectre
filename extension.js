@@ -21,15 +21,11 @@ function specFileToCodeFile(filePath) {
 }
 
 async function getTestCommand(filePath, watch) {
-  const packageJsonPath = vscode.workspace.rootPath + '/package.json';
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  const workspaceConfig = vscode.workspace.getConfiguration('spectre')
+  let testCommand = workspaceConfig.get('testCommand', 'pnpm run test');
+  let testCommandWatch = workspaceConfig.get('testCommandWatch', 'pnpm run test --watch');
 
-  const repoName = packageJson.name;
-  const isExpectedRepo = repoName === "pca-core-web";
-
-  let testCommand = isExpectedRepo ? `yarn run client-test` : 'yarn run test';
-  if (watch) testCommand += ' --watch';
-  return `${testCommand} -- ${filePath}`;
+  return `${watch ? testCommandWatch : testCommand} -- ${filePath}`
 }
 
 /**
