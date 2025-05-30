@@ -1,7 +1,7 @@
 const vscode = require('vscode');
 const fs = require('fs');
 
-const fileNameRegex = /\/([a-zA-Z]*).(ts|tsx)$/;
+const fileNameRegex = /\/([a-zA-Z]*).(ts|tsx|js|jsx)$/;
 
 async function openFileWithFallback(filePath, fileName) {
   vscode.window.showTextDocument(vscode.Uri.file(filePath), { preview: false }).then(() => { }, async () => {
@@ -21,15 +21,11 @@ function specFileToCodeFile(filePath) {
 }
 
 async function getTestCommand(filePath, watch) {
-  const packageJsonPath = vscode.workspace.rootPath + '/package.json';
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  const workspaceConfig = vscode.workspace.getConfiguration('spectre')
+  let testCommand = workspaceConfig.get('testCommand', 'pnpm test');
+  let testCommandWatch = workspaceConfig.get('testCommandWatch', 'pnpm test-watch');
 
-  const repoName = packageJson.name;
-  const isExpectedRepo = repoName === "pca-core-web";
-
-  let testCommand = isExpectedRepo ? `yarn run client-test` : 'yarn run test';
-  if (watch) testCommand += ' --watch';
-  return `${testCommand} -- ${filePath}`;
+  return `${watch ? testCommandWatch : testCommand} -- ${filePath}`
 }
 
 /**
