@@ -20,3 +20,4 @@ All notable changes to the "spectre" extension will be documented in this file.
   - Support `js` and `jsx` files
   - Watch mode now works more consistently across multiple package managers (npm, pnpm, yarn etc)
 - 1.0.8: Add number support to the filename regex
+- 1.0.9: Add dash and underscore support to the filename regex
