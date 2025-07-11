@@ -4,7 +4,7 @@
   "description": "VSCode command to open your spec files",
   "icon": "assets/spectre_logo.png",
   "publisher": "JaredCorker",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -19,23 +19,23 @@
   "main": "./extension.js",
   "contributes": {
     "commands": [
-    {
-      "command": "spectre.spectre",
-      "title": "Spectre - Open test file"
-    },
-    {
-      "command": "spectre.test",
-      "title": "Spectre - Run tests"
-    },
-    {
-      "command": "spectre.test-watch",
-      "title": "Spectre - Run tests in watch mode"
-    },
-    {
-      "command": "spectre.mock",
-      "title": "Spectre - Open mock file"
-    }
-  ]
+      {
+        "command": "spectre.spectre",
+        "title": "Spectre - Open test file"
+      },
+      {
+        "command": "spectre.test",
+        "title": "Spectre - Run tests"
+      },
+      {
+        "command": "spectre.test-watch",
+        "title": "Spectre - Run tests in watch mode"
+      },
+      {
+        "command": "spectre.mock",
+        "title": "Spectre - Open mock file"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",

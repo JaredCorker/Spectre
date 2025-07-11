@@ -1,58 +1,79 @@
-const vscode = require('vscode');
-const fs = require('fs');
+const vscode = require("vscode");
+const fs = require("fs");
 
-const fileNameRegex = /\/([a-zA-Z0-9]*).(ts|tsx|js|jsx)$/;
+const fileNameRegex = /\/([a-zA-Z0-9-_]*).(ts|tsx|js|jsx)$/;
 
 async function openFileWithFallback(filePath, fileName) {
-  vscode.window.showTextDocument(vscode.Uri.file(filePath), { preview: false }).then(() => { }, async () => {
-    const answer = await vscode.window.showErrorMessage(`Could not find ${fileName}`, "Create", "Cancel")
-    if (answer === "Create") {
-      const wsEdit = new vscode.WorkspaceEdit()
-      wsEdit.createFile(vscode.Uri.file(filePath), { ignoreIfExists: true })
-      vscode.workspace.applyEdit(wsEdit).then(() => {
-        vscode.window.showTextDocument(vscode.Uri.file(filePath), { preview: false })
-      })
-    }
-  })
+  vscode.window
+    .showTextDocument(vscode.Uri.file(filePath), { preview: false })
+    .then(
+      () => {},
+      async () => {
+        const answer = await vscode.window.showErrorMessage(
+          `Could not find ${fileName}`,
+          "Create",
+          "Cancel"
+        );
+        if (answer === "Create") {
+          const wsEdit = new vscode.WorkspaceEdit();
+          wsEdit.createFile(vscode.Uri.file(filePath), {
+            ignoreIfExists: true,
+          });
+          vscode.workspace.applyEdit(wsEdit).then(() => {
+            vscode.window.showTextDocument(vscode.Uri.file(filePath), {
+              preview: false,
+            });
+          });
+        }
+      }
+    );
 }
 
 function specFileToCodeFile(filePath) {
-  return filePath.replace("spec.", "").replace("__tests__/", "")
+  return filePath.replace("spec.", "").replace("__tests__/", "");
 }
 
 async function getTestCommand(filePath, watch) {
-  const workspaceConfig = vscode.workspace.getConfiguration('spectre')
-  let testCommand = workspaceConfig.get('testCommand', 'pnpm test');
-  let testCommandWatch = workspaceConfig.get('testCommandWatch', 'pnpm test-watch');
+  const workspaceConfig = vscode.workspace.getConfiguration("spectre");
+  let testCommand = workspaceConfig.get("testCommand", "pnpm test");
+  let testCommandWatch = workspaceConfig.get(
+    "testCommandWatch",
+    "pnpm test-watch"
+  );
 
-  return `${watch ? testCommandWatch : testCommand} -- ${filePath}`
+  return `${watch ? testCommandWatch : testCommand} -- ${filePath}`;
 }
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-  let disposableSpectre = vscode.commands.registerCommand('spectre.spectre', function () {
-    const currentFile = vscode.window.activeTextEditor.document.fileName
-    if (!currentFile) return;
+  let disposableSpectre = vscode.commands.registerCommand(
+    "spectre.spectre",
+    function () {
+      const currentFile = vscode.window.activeTextEditor.document.fileName;
+      if (!currentFile) return;
 
-    if (currentFile.includes(".spec.")) {
-      const codeFile = specFileToCodeFile(currentFile)
-      vscode.window.showTextDocument(vscode.Uri.file(codeFile), { preview: false })
-    } else {
-      const match = currentFile.match(fileNameRegex)
-      if (!match) return;
+      if (currentFile.includes(".spec.")) {
+        const codeFile = specFileToCodeFile(currentFile);
+        vscode.window.showTextDocument(vscode.Uri.file(codeFile), {
+          preview: false,
+        });
+      } else {
+        const match = currentFile.match(fileNameRegex);
+        if (!match) return;
 
-      let specFilePath = currentFile;
+        let specFilePath = currentFile;
 
-      if (specFilePath.includes("__mocks__/")) {
-        specFilePath = specFilePath.replace("__mocks__/", "")
+        if (specFilePath.includes("__mocks__/")) {
+          specFilePath = specFilePath.replace("__mocks__/", "");
+        }
+        const specFileName = `/__tests__/${match[1]}.spec.${match[2]}`;
+        specFilePath = specFilePath.replace(match[0], specFileName);
+        openFileWithFallback(specFilePath, specFileName);
       }
-      const specFileName = `/__tests__/${match[1]}.spec.${match[2]}`
-      specFilePath = specFilePath.replace(match[0], specFileName)
-      openFileWithFallback(specFilePath, specFileName)
     }
-  });
+  );
 
   async function runTest(watch) {
     const currentFile = vscode.window.activeTextEditor.document.fileName;
@@ -69,8 +90,10 @@ function activate(context) {
       terminalCommand = await getTestCommand(specFileName, watch);
     }
 
-    const defaultShellName = vscode.env.shell.split('/').pop();
-    const defaultTerminal = vscode.window.terminals.find(t => t.name === defaultShellName);
+    const defaultShellName = vscode.env.shell.split("/").pop();
+    const defaultTerminal = vscode.window.terminals.find(
+      (t) => t.name === defaultShellName
+    );
 
     if (defaultTerminal) {
       defaultTerminal.show();
@@ -82,37 +105,51 @@ function activate(context) {
     }
   }
 
-  let disposableTest = vscode.commands.registerCommand('spectre.test', async function () {
-    await runTest(false);
-  });
-
-  let disposableTestWatch = vscode.commands.registerCommand('spectre.test-watch', async function () {
-    await runTest(true);
-  });
-
-  let disposableMock = vscode.commands.registerCommand('spectre.mock', function () {
-    const currentFile = vscode.window.activeTextEditor.document.fileName
-    if (!currentFile) return;
-
-    if (currentFile.includes("__mocks__")) {
-      const match = currentFile.match(fileNameRegex)
-      if (!match) return;
-
-      const specFileName = `/__tests__/${match[1]}.spec.${match[2]}`
-      const specFilePath = currentFile.replace("__mocks__/", "").replace(match[0], specFileName)
-      openFileWithFallback(specFilePath, specFileName);
-    } else {
-      let mockFilePath = currentFile;
-
-      if (mockFilePath.includes(".spec.")) {
-        mockFilePath = specFileToCodeFile(mockFilePath)
-      }
-      const mockFileName = mockFilePath.match(fileNameRegex)?.[0]
-      if (!mockFileName) return;
-      mockFilePath = mockFilePath.replace(mockFileName, `/__mocks__/${mockFileName}`)
-      openFileWithFallback(mockFilePath, mockFileName)
+  let disposableTest = vscode.commands.registerCommand(
+    "spectre.test",
+    async function () {
+      await runTest(false);
     }
-  });
+  );
+
+  let disposableTestWatch = vscode.commands.registerCommand(
+    "spectre.test-watch",
+    async function () {
+      await runTest(true);
+    }
+  );
+
+  let disposableMock = vscode.commands.registerCommand(
+    "spectre.mock",
+    function () {
+      const currentFile = vscode.window.activeTextEditor.document.fileName;
+      if (!currentFile) return;
+
+      if (currentFile.includes("__mocks__")) {
+        const match = currentFile.match(fileNameRegex);
+        if (!match) return;
+
+        const specFileName = `/__tests__/${match[1]}.spec.${match[2]}`;
+        const specFilePath = currentFile
+          .replace("__mocks__/", "")
+          .replace(match[0], specFileName);
+        openFileWithFallback(specFilePath, specFileName);
+      } else {
+        let mockFilePath = currentFile;
+
+        if (mockFilePath.includes(".spec.")) {
+          mockFilePath = specFileToCodeFile(mockFilePath);
+        }
+        const mockFileName = mockFilePath.match(fileNameRegex)?.[0];
+        if (!mockFileName) return;
+        mockFilePath = mockFilePath.replace(
+          mockFileName,
+          `/__mocks__/${mockFileName}`
+        );
+        openFileWithFallback(mockFilePath, mockFileName);
+      }
+    }
+  );
 
   context.subscriptions.push(disposableSpectre);
   context.subscriptions.push(disposableTest);
@@ -120,9 +157,9 @@ function activate(context) {
   context.subscriptions.push(disposableMock);
 }
 
-function deactivate() { }
+function deactivate() {}
 
 module.exports = {
   activate,
-  deactivate
+  deactivate,
 };
